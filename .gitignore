@@ -1,0 +1,16 @@
+target/
+*.class
+
+# IDE & Editor artifacts
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Logs & temp
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
