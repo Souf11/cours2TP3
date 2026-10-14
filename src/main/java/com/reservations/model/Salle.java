@@ -1,15 +1,12 @@
 package com.reservations.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "salles")
-public class Salle implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Salle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +14,6 @@ public class Salle implements Serializable {
 
     @Column(nullable = false)
     private String nom;
-
-    @Column
-    private int capacite;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -39,37 +33,14 @@ public class Salle implements Serializable {
         this.nom = nom;
     }
 
-    public Salle(String nom, int capacite) {
-        this.nom = nom;
-        this.capacite = capacite;
-    }
-
     public void addEquipement(Equipement equipement) {
-        if (equipement != null) {
-            this.equipements.add(equipement);
-            equipement.getSalles().add(this);
-        }
+        equipements.add(equipement);
+        equipement.getSalles().add(this);
     }
 
     public void removeEquipement(Equipement equipement) {
-        if (equipement != null) {
-            this.equipements.remove(equipement);
-            equipement.getSalles().remove(this);
-        }
-    }
-
-    public void addReservation(Reservation reservation) {
-        if (reservation != null) {
-            this.reservations.add(reservation);
-            reservation.setSalle(this);
-        }
-    }
-
-    public void removeReservation(Reservation reservation) {
-        if (reservation != null) {
-            this.reservations.remove(reservation);
-            reservation.setSalle(null);
-        }
+        equipements.remove(equipement);
+        equipement.getSalles().remove(this);
     }
 
     public Long getId() {
@@ -88,14 +59,6 @@ public class Salle implements Serializable {
         this.nom = nom;
     }
 
-    public int getCapacite() {
-        return capacite;
-    }
-
-    public void setCapacite(int capacite) {
-        this.capacite = capacite;
-    }
-
     public Set<Equipement> getEquipements() {
         return equipements;
     }
@@ -110,14 +73,5 @@ public class Salle implements Serializable {
 
     public void setReservations(Set<Reservation> reservations) {
         this.reservations = reservations;
-    }
-
-    @Override
-    public String toString() {
-        return "Salle{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", capacite=" + capacite +
-                '}';
     }
 }

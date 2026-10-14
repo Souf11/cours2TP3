@@ -1,15 +1,12 @@
 package com.reservations.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "utilisateurs")
-public class Utilisateur implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Utilisateur {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +17,6 @@ public class Utilisateur implements Serializable {
 
     @Column(nullable = false)
     private String nom;
-
-    @Column
-    private String telephone;
 
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Reservation> reservations = new HashSet<>();
@@ -35,23 +29,13 @@ public class Utilisateur implements Serializable {
         this.email = email;
     }
 
-    public Utilisateur(String nom, String email, String telephone) {
-        this.nom = nom;
-        this.email = email;
-        this.telephone = telephone;
-    }
-
     public void addReservation(Reservation reservation) {
-        if (reservation != null) {
-            this.reservations.add(reservation);
-            reservation.setUtilisateur(this);
-        }
+        reservations.add(reservation);
+        reservation.setUtilisateur(this);
     }
 
     public void removeReservation(Reservation reservation) {
-        if (reservation != null) {
-            this.reservations.remove(reservation);
-        }
+        reservations.remove(reservation);
     }
 
     public Long getId() {
@@ -78,29 +62,11 @@ public class Utilisateur implements Serializable {
         this.nom = nom;
     }
 
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
     public Set<Reservation> getReservations() {
         return reservations;
     }
 
     public void setReservations(Set<Reservation> reservations) {
         this.reservations = reservations;
-    }
-
-    @Override
-    public String toString() {
-        return "Utilisateur{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", email='" + email + '\'' +
-                ", telephone='" + telephone + '\'' +
-                '}';
     }
 }

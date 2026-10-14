@@ -1,30 +1,17 @@
 package com.reservations.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reservations")
-public class Reservation implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime dateDebut;
-
-    @Column(nullable = false)
-    private LocalDateTime dateFin;
-
-    @Column
-    private String motif;
-
-    @Column
-    private String statut;
+    private String date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "utilisateur_id", nullable = false)
@@ -35,16 +22,10 @@ public class Reservation implements Serializable {
     private Salle salle;
 
     public Reservation() {
-        this.dateDebut = LocalDateTime.now();
-        this.dateFin = this.dateDebut.plusHours(2);
-        this.statut = "CONFIRMEE";
     }
 
-    public Reservation(LocalDateTime dateDebut, LocalDateTime dateFin, String motif) {
-        this.dateDebut = dateDebut;
-        this.dateFin = dateFin;
-        this.motif = motif;
-        this.statut = "CONFIRMEE";
+    public Reservation(String date) {
+        this.date = date;
     }
 
     public Long getId() {
@@ -55,40 +36,12 @@ public class Reservation implements Serializable {
         this.id = id;
     }
 
-    public LocalDateTime dateDebut() {
-        return dateDebut;
+    public String getDate() {
+        return date;
     }
 
-    public LocalDateTime getDateDebut() {
-        return dateDebut;
-    }
-
-    public void setDateDebut(LocalDateTime dateDebut) {
-        this.dateDebut = dateDebut;
-    }
-
-    public LocalDateTime getDateFin() {
-        return dateFin;
-    }
-
-    public void setDateFin(LocalDateTime dateFin) {
-        this.dateFin = dateFin;
-    }
-
-    public String getMotif() {
-        return motif;
-    }
-
-    public void setMotif(String motif) {
-        this.motif = motif;
-    }
-
-    public String getStatut() {
-        return statut;
-    }
-
-    public void setStatut(String statut) {
-        this.statut = statut;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public Utilisateur getUtilisateur() {
@@ -105,16 +58,5 @@ public class Reservation implements Serializable {
 
     public void setSalle(Salle salle) {
         this.salle = salle;
-    }
-
-    @Override
-    public String toString() {
-        return "Reservation{" +
-                "id=" + id +
-                ", dateDebut=" + dateDebut +
-                ", dateFin=" + dateFin +
-                ", motif='" + motif + '\'' +
-                ", statut='" + statut + '\'' +
-                '}';
     }
 }
