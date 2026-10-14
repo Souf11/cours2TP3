@@ -15,7 +15,6 @@ Projet Maven complet démontrant la mise en œuvre de JPA (Java Persistence API)
 ```text
 gestion-reservations/
 ├── pom.xml
-├── COMPTE_RENDU_TP.md
 ├── README.md
 └── src/
     ├── main/
