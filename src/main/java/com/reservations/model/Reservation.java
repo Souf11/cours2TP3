@@ -3,13 +3,7 @@ package com.reservations.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
-/**
- * Entité centrale représentant une réservation effectuée par un Utilisateur pour une Salle.
- * - Relation ManyToOne avec Utilisateur (obligatoire, clef étrangère 'utilisateur_id')
- * - Relation ManyToOne avec Salle (obligatoire, clef étrangère 'salle_id')
- */
 @Entity
 @Table(name = "reservations")
 public class Reservation implements Serializable {
@@ -20,35 +14,22 @@ public class Reservation implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "reference", nullable = false, unique = true, length = 50)
-    private String reference;
-
-    @Column(name = "date_debut", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime dateDebut;
 
-    @Column(name = "date_fin", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime dateFin;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "statut", length = 30)
-    private StatutReservation statut = StatutReservation.CONFIRMEE;
-
-    @Column(name = "motif", length = 200)
+    @Column
     private String motif;
 
-    /**
-     * Plusieurs réservations appartiennent à un seul Utilisateur.
-     * Côté propriétaire de la relation ManyToOne.
-     */
+    @Column
+    private String statut;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "utilisateur_id", nullable = false)
     private Utilisateur utilisateur;
 
-    /**
-     * Plusieurs réservations peuvent concerner une Salle.
-     * Côté propriétaire de la relation ManyToOne.
-     * Cascade PERSIST et MERGE permettent de propager la sauvegarde de la salle si celle-ci est nouvelle.
-     */
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "salle_id", nullable = false)
     private Salle salle;
@@ -56,18 +37,15 @@ public class Reservation implements Serializable {
     public Reservation() {
         this.dateDebut = LocalDateTime.now();
         this.dateFin = this.dateDebut.plusHours(2);
-        this.reference = "RES-" + System.currentTimeMillis();
+        this.statut = "CONFIRMEE";
     }
 
-    public Reservation(String reference, LocalDateTime dateDebut, LocalDateTime dateFin, String motif) {
-        this.reference = reference;
+    public Reservation(LocalDateTime dateDebut, LocalDateTime dateFin, String motif) {
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.motif = motif;
-        this.statut = StatutReservation.CONFIRMEE;
+        this.statut = "CONFIRMEE";
     }
-
-    // Getters et Setters
 
     public Long getId() {
         return id;
@@ -77,12 +55,8 @@ public class Reservation implements Serializable {
         this.id = id;
     }
 
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(String reference) {
-        this.reference = reference;
+    public LocalDateTime dateDebut() {
+        return dateDebut;
     }
 
     public LocalDateTime getDateDebut() {
@@ -101,20 +75,20 @@ public class Reservation implements Serializable {
         this.dateFin = dateFin;
     }
 
-    public StatutReservation getStatut() {
-        return statut;
-    }
-
-    public void setStatut(StatutReservation statut) {
-        this.statut = statut;
-    }
-
     public String getMotif() {
         return motif;
     }
 
     public void setMotif(String motif) {
         this.motif = motif;
+    }
+
+    public String getStatut() {
+        return statut;
+    }
+
+    public void setStatut(String statut) {
+        this.statut = statut;
     }
 
     public Utilisateur getUtilisateur() {
@@ -134,30 +108,13 @@ public class Reservation implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Reservation that = (Reservation) o;
-        if (reference != null && that.reference != null) {
-            return Objects.equals(reference, that.reference);
-        }
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return reference != null ? Objects.hash(reference) : (id != null ? Objects.hash(id) : 31);
-    }
-
-    @Override
     public String toString() {
         return "Reservation{" +
                 "id=" + id +
-                ", reference='" + reference + '\'' +
                 ", dateDebut=" + dateDebut +
                 ", dateFin=" + dateFin +
-                ", statut=" + statut +
                 ", motif='" + motif + '\'' +
+                ", statut='" + statut + '\'' +
                 '}';
     }
 }
